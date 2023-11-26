@@ -10,7 +10,7 @@ CREATE TABLE odontologos(
   email VARCHAR(30) NOT NULL,
   direccion VARCHAR(30) NOT NULL,
   telefono VARCHAR(9) NOT NULL,
-  fechaDeNacimiento DATE NOT NULL,
+  fecha_de_nacimiento DATE NOT NULL,
   estado BIT(1) NOT NULL,
   PRIMARY KEY (id_odontologo)
   );
@@ -41,8 +41,8 @@ CREATE TABLE horarios (
   id_odontologo INT NOT NULL,
   id_usuario INT NOT NULL,
   fecha DATE NOT NULL,
-  horaInicio VARCHAR(5) NOT NULL,
-  horaFin VARCHAR(5) NOT NULL,
+  hora_inicio VARCHAR(5) NOT NULL,
+  hora_fin VARCHAR(5) NOT NULL,
   estado BIT(1) NOT NULL,
   PRIMARY KEY (id_horario),
   FOREIGN KEY (id_odontologo) REFERENCES odontologos(id_odontologo) ON DELETE CASCADE,
@@ -57,7 +57,7 @@ CREATE TABLE pacientes (
   email VARCHAR(30) NOT NULL,
   direccion VARCHAR(30) NOT NULL,
   telefono VARCHAR(9) NOT NULL,
-  fechaDeNacimiento DATE NOT NULL,
+  fecha_de_nacimiento DATE NOT NULL,
   PRIMARY KEY (id_paciente)
   );
 
@@ -83,8 +83,8 @@ CREATE TABLE citas (
 	id_pago INT NOT NULL AUTO_INCREMENT,
     id_cita INT NOT NULL,
     id_formaPago INT NOT NULL,
-    fechaPago DATE,
-    montoTotal DECIMAL(9,2) NOT NULL,
+    fecha_pago DATE,
+    monto_total DECIMAL(9,2) NOT NULL,
     estado BIT(1) NOT NULL,
     PRIMARY KEY (id_pago),
     FOREIGN KEY (id_cita) REFERENCES citas(id_cita) ON DELETE CASCADE,
