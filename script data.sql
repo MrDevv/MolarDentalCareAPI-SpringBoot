@@ -32,9 +32,9 @@ VALUES(1, 2, 1, 'pendiente'),
 (2, 1, 1, 'atendida');
 
 -- Pagos
-INSERT INTO pagos(id_cita, id_formaPago, monto_total, estado)
+INSERT INTO pagos(id_cita, id_forma_pago, monto_total, estado)
 VALUES(1, 1, 30.0, 0);
-INSERT INTO pagos(id_cita, id_formaPago, fecha_pago ,monto_total, estado)
+INSERT INTO pagos(id_cita, id_forma_pago, fecha_pago ,monto_total, estado)
 VALUES(2, 2, '2023-11-24', 35.0, 1);
 
 -- Select a todas las tablas 

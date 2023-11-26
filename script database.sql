@@ -74,20 +74,20 @@ CREATE TABLE citas (
   );
   
   CREATE TABLE formaspago(
-	id_formaPago INT NOT NULL AUTO_INCREMENT,
+	id_forma_pago INT NOT NULL AUTO_INCREMENT,
     descripcion VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_formaPago)
+    PRIMARY KEY (id_forma_pago)
   );
   
   CREATE TABLE pagos(
 	id_pago INT NOT NULL AUTO_INCREMENT,
     id_cita INT NOT NULL,
-    id_formaPago INT NOT NULL,
+    id_forma_pago INT NOT NULL,
     fecha_pago DATE,
     monto_total DECIMAL(9,2) NOT NULL,
     estado BIT(1) NOT NULL,
     PRIMARY KEY (id_pago),
     FOREIGN KEY (id_cita) REFERENCES citas(id_cita) ON DELETE CASCADE,
-    FOREIGN KEY (id_formaPago) REFERENCES formaspago(id_formaPago) ON DELETE CASCADE
+    FOREIGN KEY (id_forma_pago) REFERENCES formaspago(id_forma_pago) ON DELETE CASCADE
   );
 
