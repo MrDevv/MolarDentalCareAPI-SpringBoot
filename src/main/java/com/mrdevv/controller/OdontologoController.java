@@ -68,7 +68,7 @@ public class OdontologoController {
                                     .direccion(odontologoCreate.getDireccion())
                                     .telefono(odontologoCreate.getTelefono())
                                     .fechaDeNacimiento(odontologoCreate.getFechaDeNacimiento())
-                                    .estado(odontologoCreate.isEstado())
+                                    .estado(odontologoCreate.getEstado())
                                     .build())
                             .build()
                     , HttpStatus.CREATED
@@ -102,7 +102,7 @@ public class OdontologoController {
                                         .direccion(odontologoUpdate.getDireccion())
                                         .telefono(odontologoUpdate.getTelefono())
                                         .fechaDeNacimiento(odontologoUpdate.getFechaDeNacimiento())
-                                        .estado(odontologoUpdate.isEstado())
+                                        .estado(odontologoUpdate.getEstado())
                                         .build())
                                 .build()
                         , HttpStatus.CREATED

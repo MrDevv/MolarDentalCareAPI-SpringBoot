@@ -27,12 +27,12 @@ public class HorarioImplService implements IHorarioService {
     public Horario guardar(HorarioDto horarioDto) {
         return horarioDAO.save(Horario.builder()
                 .idHorario(horarioDto.getIdHorario())
-                .idOdontologo(horarioDto.getIdOdontologo())
-                .idUsuario(horarioDto.getIdUsuario())
                 .fecha(horarioDto.getFecha())
                 .horaInicio(horarioDto.getHoraInicio())
                 .horaFin(horarioDto.getHoraFin())
                 .estado(horarioDto.isEstado())
+                .odontologo(horarioDto.getOdontologo())
+                .usuario(horarioDto.getUsuario())
                 .build());
     }
 

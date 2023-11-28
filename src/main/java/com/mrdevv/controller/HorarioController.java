@@ -2,6 +2,8 @@ package com.mrdevv.controller;
 
 import com.mrdevv.model.dto.HorarioDto;
 import com.mrdevv.model.entity.Horario;
+import com.mrdevv.model.entity.Odontologo;
+import com.mrdevv.model.entity.Usuario;
 import com.mrdevv.model.payload.MensajeResponse;
 import com.mrdevv.service.IHorarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,34 +22,41 @@ public class HorarioController {
     IHorarioService horarioService;
 
     @GetMapping("horarios")
-    public ResponseEntity<?> listarHorarios(){
+    public ResponseEntity<?> listarHorarios() {
         try {
             List<Horario> horarios = horarioService.listarTodos();
 
-            if (horarios.isEmpty()){
-                return new ResponseEntity<>(
-                        MensajeResponse.builder()
-                                .mensaje("No hay registros en la base de datos")
-                                .object(horarios)
-                                .build()
-                        , HttpStatus.OK
-                );
-            }
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
-                            .mensaje("Ok")
-                            .object(horarios)
+            List<HorarioDto> horariosDto = horarios.stream().map(
+                    horario -> HorarioDto.builder()
+                            .idHorario(horario.getIdHorario())
+                            .fecha(horario.getFecha())
+                            .horaInicio(horario.getHoraInicio())
+                            .horaFin(horario.getHoraFin())
+                            .odontologo(new Odontologo(
+                                    horario.getOdontologo().getIdOdontologo(),
+                                    horario.getOdontologo().getNombre(),
+                                    horario.getOdontologo().getApellido()))
+                            .usuario(new Usuario(
+                                    horario.getUsuario().getIdUsuario(),
+                                    horario.getUsuario().getApellido(),
+                                    horario.getUsuario().getNombre(),
+                                    horario.getUsuario().getEstado(),
+                                    horario.getUsuario().getRol()))
                             .build()
-                    , HttpStatus.OK
-            );
-        }catch (DataAccessException ex){
-            return new ResponseEntity<>(
+            ).toList();
+            return ResponseEntity.ok(
                     MensajeResponse.builder()
+                            .mensaje(horariosDto.isEmpty() ? "No hay registros en la base de datos" : "Ok")
+                            .object(horariosDto)
+                            .build()
+            );
+        } catch (DataAccessException ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
@@ -55,102 +65,94 @@ public class HorarioController {
         try {
             Horario horario = horarioService.guardar(horarioDto);
 
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.created(URI.create("/api/v1/horario"))
+                    .body(MensajeResponse.builder()
                             .mensaje("Se registró el horario correctamente")
                             .object(HorarioDto.builder()
                                     .idHorario(horario.getIdHorario())
-                                    .idOdontologo(horario.getIdOdontologo())
-                                    .idUsuario(horario.getIdUsuario())
                                     .fecha(horario.getFecha())
                                     .horaInicio(horario.getHoraInicio())
                                     .horaFin(horario.getHoraFin())
                                     .estado(horario.isEstado())
+                                    .odontologo(new Odontologo(
+                                            horario.getOdontologo().getIdOdontologo()))
+                                    .usuario(new Usuario(
+                                            horario.getUsuario().getIdUsuario()))
                                     .build()
-                            )
-                            .build()
-                    , HttpStatus.CREATED
-            );
-
-        }catch (DataAccessException ex){
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+                            ).build()
+                    );
+        } catch (DataAccessException ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
     @PutMapping("horario/{id}")
-    public ResponseEntity<?> actualizarHorario(@RequestBody HorarioDto horarioDto, @PathVariable Integer id){
+    public ResponseEntity<?> actualizarHorario(@RequestBody HorarioDto horarioDto, @PathVariable Integer id) {
         try {
-            if (horarioService.existePorId(id)){
+            if (horarioService.existePorId(id)) {
                 horarioDto.setIdHorario(id);
                 Horario horarioUpdate = horarioService.guardar(horarioDto);
-                return new ResponseEntity<>(
+
+                return ResponseEntity.ok(
                         MensajeResponse.builder()
                                 .mensaje("Se actualizó correctamente el horario")
-                                .object(Horario.builder()
+                                .object(HorarioDto.builder()
                                         .idHorario(horarioUpdate.getIdHorario())
-                                        .idOdontologo(horarioUpdate.getIdOdontologo())
-                                        .idUsuario(horarioUpdate.getIdUsuario())
                                         .fecha(horarioUpdate.getFecha())
                                         .horaInicio(horarioUpdate.getHoraInicio())
                                         .horaFin(horarioUpdate.getHoraFin())
                                         .estado(horarioUpdate.isEstado())
+                                        .odontologo(new Odontologo(
+                                                horarioUpdate.getOdontologo().getIdOdontologo()
+                                        ))
+                                        .usuario(new Usuario(
+                                                horarioUpdate.getUsuario().getIdUsuario()
+                                        ))
                                         .build())
-                                .build()
-                        , HttpStatus.OK
-                );
+                                .build());
             }
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(MensajeResponse.builder()
                             .mensaje("No existe un horario con el ID ingresado")
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }catch (DataAccessException ex){
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+                            .build());
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
     @DeleteMapping("horario/{id}")
-    public ResponseEntity<?> eliminarHorario(@PathVariable Integer id){
+    public ResponseEntity<?> eliminarHorario(@PathVariable Integer id) {
         try {
-            if (horarioService.existePorId(id)){
+            if (horarioService.existePorId(id)) {
                 horarioService.eliminarPorId(id);
-                return new ResponseEntity<>(
+                return ResponseEntity.ok(
                         MensajeResponse.builder()
                                 .mensaje("Se eliminó correctamente el horario")
                                 .object(null)
                                 .build()
-                        , HttpStatus.OK
                 );
             }
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(MensajeResponse.builder()
                             .mensaje("No existe un horario con el ID ingresado")
                             .object(null)
-                            .build()
-                    , HttpStatus.OK
-            );
-        }catch (DataAccessException ex){
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+                            .build());
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 }

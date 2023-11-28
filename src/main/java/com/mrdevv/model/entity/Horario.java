@@ -19,10 +19,6 @@ public class Horario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_horario")
     Integer idHorario;
-    @Column(name = "id_odontologo")
-    Integer idOdontologo;
-    @Column(name = "id_usuario")
-    Integer idUsuario;
     @Column(name = "fecha")
     Date fecha;
     @Column(name = "hora_inicio")
@@ -31,4 +27,12 @@ public class Horario {
     String horaFin;
     @Column(name = "estado")
     boolean estado;
+
+    @ManyToOne
+    @JoinColumn(name = "id_odontologo")
+    Odontologo odontologo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    Usuario usuario;
 }

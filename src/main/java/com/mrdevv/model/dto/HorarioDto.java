@@ -1,5 +1,7 @@
 package com.mrdevv.model.dto;
 
+import com.mrdevv.model.entity.Odontologo;
+import com.mrdevv.model.entity.Usuario;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,10 +11,11 @@ import java.util.Date;
 @Builder
 public class HorarioDto {
     Integer idHorario;
-    Integer idOdontologo;
-    Integer idUsuario;
     Date fecha;
     String horaInicio;
     String horaFin;
     boolean estado;
+
+    Odontologo odontologo;
+    Usuario usuario;
 }
