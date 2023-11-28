@@ -1,5 +1,6 @@
 package com.mrdevv.model.dto;
 
+import com.mrdevv.model.entity.Rol;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,7 +8,6 @@ import lombok.Data;
 @Builder
 public class UsuarioDto {
     Integer idUsuario;
-    Integer idRol;
     String apellido;
     String nombre;
     String dni;
@@ -16,4 +16,5 @@ public class UsuarioDto {
     String usuario;
     String password;
     boolean estado;
+    Rol rol;
 }

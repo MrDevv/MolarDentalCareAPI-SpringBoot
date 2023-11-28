@@ -27,7 +27,6 @@ public class UsuarioImplService implements IUsuarioService {
     public Usuario guardar(UsuarioDto usuarioDto) {
         return usuarioDAO.save(Usuario.builder()
                 .idUsuario(usuarioDto.getIdUsuario())
-                .idRol(usuarioDto.getIdRol())
                 .apellido(usuarioDto.getApellido())
                 .nombre(usuarioDto.getNombre())
                 .dni(usuarioDto.getDni())
@@ -36,6 +35,7 @@ public class UsuarioImplService implements IUsuarioService {
                 .usuario(usuarioDto.getUsuario())
                 .password(usuarioDto.getPassword())
                 .estado(usuarioDto.isEstado())
+                .rol(usuarioDto.getRol())
                 .build());
     }
 

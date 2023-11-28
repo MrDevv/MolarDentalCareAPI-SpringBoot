@@ -17,8 +17,6 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     Integer idUsuario;
-    @Column(name = "id_rol")
-    Integer idRol;
     @Column(name = "apellido")
     String apellido;
     @Column(name = "nombre")
@@ -35,4 +33,8 @@ public class Usuario {
     String password;
     @Column(name = "estado")
     boolean estado;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_rol")
+    Rol rol;
 }

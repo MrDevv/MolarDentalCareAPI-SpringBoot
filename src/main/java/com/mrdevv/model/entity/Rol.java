@@ -1,5 +1,6 @@
 package com.mrdevv.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +19,6 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idRol;
     @Column(name = "descripcion")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     String descripcion;
 }
