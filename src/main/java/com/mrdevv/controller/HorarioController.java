@@ -73,7 +73,7 @@ public class HorarioController {
                                     .fecha(horario.getFecha())
                                     .horaInicio(horario.getHoraInicio())
                                     .horaFin(horario.getHoraFin())
-                                    .estado(horario.isEstado())
+                                    .estado(horario.getEstado())
                                     .odontologo(new Odontologo(
                                             horario.getOdontologo().getIdOdontologo()))
                                     .usuario(new Usuario(
@@ -106,7 +106,7 @@ public class HorarioController {
                                         .fecha(horarioUpdate.getFecha())
                                         .horaInicio(horarioUpdate.getHoraInicio())
                                         .horaFin(horarioUpdate.getHoraFin())
-                                        .estado(horarioUpdate.isEstado())
+                                        .estado(horarioUpdate.getEstado())
                                         .odontologo(new Odontologo(
                                                 horarioUpdate.getOdontologo().getIdOdontologo()
                                         ))

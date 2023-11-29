@@ -26,10 +26,10 @@ public class CitaImplService implements ICitaService {
     public Cita guardar(CitaDto citaDto) {
         return citaDAO.save(Cita.builder()
                 .idCita(citaDto.getIdCita())
-                .idHorario(citaDto.getIdHorario())
-                .idPaciente(citaDto.getIdPaciente())
-                .idUsuario(citaDto.getIdUsuario())
                 .estado(citaDto.getEstado())
+                .horario(citaDto.getHorario())
+                .paciente(citaDto.getPaciente())
+                .usuario(citaDto.getUsuario())
                 .build());
     }
 

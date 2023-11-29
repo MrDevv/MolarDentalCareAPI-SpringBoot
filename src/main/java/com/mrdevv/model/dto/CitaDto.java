@@ -1,5 +1,8 @@
 package com.mrdevv.model.dto;
 
+import com.mrdevv.model.entity.Horario;
+import com.mrdevv.model.entity.Paciente;
+import com.mrdevv.model.entity.Usuario;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,8 +10,8 @@ import lombok.Data;
 @Data
 public class CitaDto {
     Integer idCita;
-    Integer idHorario;
-    Integer idPaciente;
-    Integer idUsuario;
     String estado;
+    Horario horario;
+    Paciente paciente;
+    Usuario usuario;
 }

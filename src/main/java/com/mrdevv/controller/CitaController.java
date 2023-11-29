@@ -1,7 +1,7 @@
 package com.mrdevv.controller;
 
 import com.mrdevv.model.dto.CitaDto;
-import com.mrdevv.model.entity.Cita;
+import com.mrdevv.model.entity.*;
 import com.mrdevv.model.payload.MensajeResponse;
 import com.mrdevv.service.ICitaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,30 +25,40 @@ public class CitaController {
         try {
             List<Cita> citas = citaService.listarTodos();
 
-            if (citas.isEmpty()) {
-                return new ResponseEntity<>(
-                        MensajeResponse.builder()
-                                .mensaje("No hay registros en la base de datos")
-                                .object(citas)
-                                .build()
-                        , HttpStatus.OK
-                );
-            }
-            return new ResponseEntity<>(
+            List<CitaDto> citasDto = citas.stream().map(cita -> CitaDto.builder()
+                    .idCita(cita.getIdCita())
+                    .estado(cita.getEstado())
+                    .horario(new Horario(
+                            cita.getHorario().getIdHorario(),
+                            new Odontologo(
+                                    cita.getHorario().getOdontologo().getIdOdontologo(),
+                                    cita.getHorario().getOdontologo().getNombre(),
+                                    cita.getHorario().getOdontologo().getApellido()
+                            ),
+                            cita.getHorario().getFecha(),
+                            cita.getHorario().getHoraInicio(),
+                            cita.getHorario().getHoraFin()
+                    ))
+                    .paciente(new Paciente(
+                            cita.getPaciente().getIdPaciente(),
+                            cita.getPaciente().getApellido(),
+                            cita.getPaciente().getNombre()
+                    ))
+                    .usuario(new Usuario(cita.getUsuario().getIdUsuario()))
+                    .build()
+            ).toList();
+            return ResponseEntity.ok(
                     MensajeResponse.builder()
-                            .mensaje("Ok")
-                            .object(citas)
+                            .mensaje(citasDto.isEmpty() ? "No hay registros en la base de datos" : "Ok")
+                            .object(citasDto)
                             .build()
-                    , HttpStatus.OK
             );
         } catch (DataAccessException ex) {
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
@@ -55,28 +66,25 @@ public class CitaController {
     public ResponseEntity<?> guardarCita(@RequestBody CitaDto citaDto) {
         try {
             Cita citaCreated = citaService.guardar(citaDto);
-            return new ResponseEntity<>(
+            return ResponseEntity.created(URI.create("/api/v1/cita")).body(
                     MensajeResponse.builder()
                             .mensaje("Ok")
                             .object(CitaDto.builder()
                                     .idCita(citaCreated.getIdCita())
-                                    .idHorario(citaCreated.getIdHorario())
-                                    .idPaciente(citaCreated.getIdPaciente())
-                                    .idUsuario(citaCreated.getIdUsuario())
                                     .estado(citaCreated.getEstado())
+                                    .horario(citaCreated.getHorario())
+                                    .paciente(citaCreated.getPaciente())
+                                    .usuario(citaCreated.getUsuario())
                                     .build()
                             )
                             .build()
-                    , HttpStatus.CREATED
             );
         } catch (DataAccessException ex) {
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
@@ -86,36 +94,46 @@ public class CitaController {
             if (citaService.existePorId(id)) {
                 citaDto.setIdCita(id);
                 Cita citaUpdated = citaService.guardar(citaDto);
-                return new ResponseEntity<>(
+                return ResponseEntity.ok(
                         MensajeResponse.builder()
                                 .mensaje("Se actualizó correctamente la cita")
                                 .object(CitaDto.builder()
                                         .idCita(citaUpdated.getIdCita())
-                                        .idHorario(citaUpdated.getIdHorario())
-                                        .idPaciente(citaUpdated.getIdPaciente())
-                                        .idUsuario(citaUpdated.getIdUsuario())
                                         .estado(citaUpdated.getEstado())
+                                        .horario(new Horario(
+                                                citaUpdated.getHorario().getIdHorario(),
+                                                new Odontologo(
+                                                        citaUpdated.getHorario().getOdontologo().getIdOdontologo(),
+                                                        citaUpdated.getHorario().getOdontologo().getNombre(),
+                                                        citaUpdated.getHorario().getOdontologo().getApellido()
+                                                ),
+                                                citaUpdated.getHorario().getFecha(),
+                                                citaUpdated.getHorario().getHoraInicio(),
+                                                citaUpdated.getHorario().getHoraFin()
+                                        ))
+                                        .paciente(new Paciente(
+                                                citaUpdated.getPaciente().getIdPaciente(),
+                                                citaUpdated.getPaciente().getApellido(),
+                                                citaUpdated.getPaciente().getNombre()
+                                        ))
+                                        .usuario(new Usuario(citaUpdated.getUsuario().getIdUsuario()))
                                         .build()
                                 )
                                 .build()
-                        , HttpStatus.OK
                 );
             }
-            return new ResponseEntity<>(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     MensajeResponse.builder()
                             .mensaje("No existe la cita con el ID ingresado")
                             .object(null)
                             .build()
-                    , HttpStatus.OK
             );
         } catch (DataAccessException ex) {
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 
@@ -124,29 +142,25 @@ public class CitaController {
         try {
             if (citaService.existePorId(id)) {
                 citaService.eliminarPorId(id);
-                return new ResponseEntity<>(
+                return ResponseEntity.ok(
                         MensajeResponse.builder()
                                 .mensaje("Se eliminó correctamente la cita")
                                 .object(null)
                                 .build()
-                        , HttpStatus.OK
                 );
             }
-            return new ResponseEntity<>(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     MensajeResponse.builder()
                             .mensaje("No existe la cita con el ID ingresado")
                             .object(null)
                             .build()
-                    , HttpStatus.OK
             );
         } catch (DataAccessException ex) {
-            return new ResponseEntity<>(
-                    MensajeResponse.builder()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MensajeResponse.builder()
                             .mensaje(ex.getMessage())
                             .object(null)
-                            .build()
-                    , HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                            .build());
         }
     }
 }

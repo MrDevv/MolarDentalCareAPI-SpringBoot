@@ -17,12 +17,19 @@ public class Cita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cita")
     Integer idCita;
-    @Column(name = "id_horario")
-    Integer idHorario;
-    @Column(name = "id_paciente")
-    Integer idPaciente;
-    @Column(name = "id_usuario")
-    Integer idUsuario;
+
     @Column(name = "estado")
     String estado;
+
+    @JoinColumn(name = "id_horario")
+    @OneToOne
+    Horario horario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_paciente")
+    Paciente paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    Usuario usuario;
 }
