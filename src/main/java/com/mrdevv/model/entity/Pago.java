@@ -17,7 +17,7 @@ import java.util.Date;
 public class Pago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pagos")
+    @Column(name = "id_pago")
     Integer idPagos;
 
     @Column(name = "fecha_pago")
