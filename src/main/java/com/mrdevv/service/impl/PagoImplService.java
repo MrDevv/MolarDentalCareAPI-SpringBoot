@@ -29,6 +29,7 @@ public class PagoImplService implements IPagoService {
                 .idPagos(pagoDto.getIdPagos())
                 .fechaPago(pagoDto.getFechaPago())
                 .montoTotal(pagoDto.getMontoTotal())
+                .estado(pagoDto.getEstado())
                 .cita(pagoDto.getCita())
                 .formasPago(pagoDto.getFormasPago())
                 .build());

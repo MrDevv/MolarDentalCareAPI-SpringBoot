@@ -54,4 +54,9 @@ public class Horario {
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
     }
+
+    public Horario(Integer idHorario, Date fecha){
+        this.idHorario = idHorario;
+        this.fecha = fecha;
+    }
 }

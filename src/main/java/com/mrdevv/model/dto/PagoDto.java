@@ -13,6 +13,7 @@ public class PagoDto {
     Integer idPagos;
     Date fechaPago;
     Double montoTotal;
+    Boolean estado;
     Cita cita;
     FormasPago formasPago;
 }

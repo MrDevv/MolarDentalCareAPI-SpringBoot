@@ -26,6 +26,8 @@ public class Pago {
     @Column(name = "monto_total")
     Double montoTotal;
 
+    Boolean estado;
+
     @ManyToOne
     @JoinColumn(name = "id_cita")
     Cita cita;
