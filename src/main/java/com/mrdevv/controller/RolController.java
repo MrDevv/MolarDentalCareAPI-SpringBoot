@@ -4,6 +4,7 @@ import com.mrdevv.model.dto.RolDto;
 import com.mrdevv.model.entity.Rol;
 import com.mrdevv.model.payload.MensajeResponse;
 import com.mrdevv.service.impl.RolImplService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -48,9 +49,10 @@ public class RolController {
     }
 
     @PostMapping("rol")
-    public ResponseEntity<?> guardarRol(@RequestBody RolDto rolDto){
+    public ResponseEntity<?> guardarRol(@Valid @RequestBody RolDto rolDto){
         Rol rol = null;
         try {
+            System.out.println("entrando al try catch");
             rol = rolService.guardar(Rol.builder().descripcion(rolDto.getDescripcion()).build());
             return new ResponseEntity<>(
                     MensajeResponse.builder()

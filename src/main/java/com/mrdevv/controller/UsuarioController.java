@@ -4,6 +4,7 @@ import com.mrdevv.model.dto.UsuarioDto;
 import com.mrdevv.model.entity.Usuario;
 import com.mrdevv.model.payload.MensajeResponse;
 import com.mrdevv.service.IUsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class UsuarioController {
     }
 
     @PostMapping("usuario")
-    public ResponseEntity<?> guardarUsuario(@RequestBody UsuarioDto usuarioDto) {
+    public ResponseEntity<?> guardarUsuario(@Valid @RequestBody UsuarioDto usuarioDto) {
         try {
             Usuario usuario = usuarioService.guardar(usuarioDto);
             

@@ -2,6 +2,8 @@ package com.mrdevv.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,30 +21,38 @@ public class Usuario {
     @Column(name = "id_usuario")
     Integer idUsuario;
 
+    @NotBlank(message = "El apellido no puede estar vacio")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "apellido")
     String apellido;
 
+    @NotBlank
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "nombre")
     String nombre;
 
+    @NotBlank
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "dni")
     String dni;
 
+    @NotBlank
+    @Email
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "email")
     String email;
 
+    @NotBlank
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "telefono")
     String telefono;
 
+    @NotBlank
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "usuario")
     String usuario;
 
+    @NotBlank
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "password")
     String password;
@@ -56,6 +66,7 @@ public class Usuario {
     @JoinColumn(name = "id_rol")
     Rol rol;
 
+    @NotBlank
     public Usuario(Integer idUsuario){
         this.idUsuario = idUsuario;
     }
